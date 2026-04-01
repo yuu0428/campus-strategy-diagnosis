@@ -45,6 +45,13 @@ export type TypeMeta = {
   shareHook: string
 }
 
+export type TypeGroup = {
+  id: 'SE' | 'SF' | 'CE' | 'CF'
+  title: string
+  description: string
+  codes: TypeCode[]
+}
+
 export type AxisResult = {
   axis: AxisKey
   leftPole: Pole

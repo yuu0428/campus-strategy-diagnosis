@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { AXIS_CONFIG, BLOCKS, POLE_COPY, QUESTIONS, SCALE_OPTIONS } from './data/diagnosis'
+import { AXIS_CONFIG, BLOCKS, POLE_COPY, QUESTIONS, SCALE_OPTIONS, TYPE_GROUPS, TYPE_META } from './data/diagnosis'
 import { calculateResult, getAxisCaption } from './lib/assessment'
 import type { DiagnosisResult, ScaleValue } from './lib/types'
 
-type Screen = 'landing' | 'intro' | 'questions' | 'loading' | 'result'
+type Screen = 'landing' | 'intro' | 'types' | 'questions' | 'loading' | 'result'
 
 const blockSize = 6
 
@@ -134,7 +134,19 @@ function App() {
             <p className="kicker">Green Editorial Campus</p>
             <h1>大学生活タイプ診断</h1>
           </div>
-          <p className="topbar-note">48問 / 7段階 / 約5〜8分</p>
+          <div className="topbar-side">
+            <p className="topbar-note">48問 / 7段階 / 約5〜8分</p>
+            <div className="topbar-links">
+              <button className="inline-link" onClick={() => setScreen('types')}>
+                16タイプ一覧
+              </button>
+              {(screen === 'intro' || screen === 'questions' || screen === 'result') && (
+                <button className="inline-link" onClick={() => setScreen('landing')}>
+                  トップへ戻る
+                </button>
+              )}
+            </div>
+          </div>
         </header>
 
         {screen === 'landing' && (
@@ -149,6 +161,9 @@ function App() {
               <div className="hero-actions">
                 <button className="button primary" onClick={() => setScreen('intro')}>
                   診断をはじめる
+                </button>
+                <button className="button ghost" onClick={() => setScreen('types')}>
+                  16タイプ一覧を見る
                 </button>
                 <div className="pill-row">
                   <span className="pill">4軸16タイプ</span>
@@ -231,6 +246,62 @@ function App() {
               >
                 質問に進む
               </button>
+            </div>
+          </section>
+        )}
+
+        {screen === 'types' && (
+          <section className="types-stage fade-up">
+            <section className="types-hero">
+              <div className="types-hero-copy">
+                <p className="eyebrow">Campus Type Directory</p>
+                <h2>16タイプを一覧で見比べる</h2>
+                <p className="lead">
+                  本家MBTIのタイプ一覧ページのように、全タイプを先に見て雰囲気をつかめる画面です。
+                  こちらでは大学生活向けに、4つのグループで束ねています。
+                </p>
+              </div>
+              <div className="types-hero-actions">
+                <button className="button primary" onClick={() => setScreen('intro')}>
+                  診断をはじめる
+                </button>
+                <button className="button ghost" onClick={() => setScreen('landing')}>
+                  トップへ戻る
+                </button>
+              </div>
+            </section>
+
+            <div className="type-groups">
+              {TYPE_GROUPS.map((group) => (
+                <section className="type-group" key={group.id}>
+                  <div className="type-group-head">
+                    <div>
+                      <p className="eyebrow">Group {group.id}</p>
+                      <h3>{group.title}</h3>
+                    </div>
+                    <p>{group.description}</p>
+                  </div>
+                  <div className="type-grid">
+                    {group.codes.map((code) => {
+                      const meta = TYPE_META[code]
+                      return (
+                        <article className="type-card" key={code}>
+                          <div className="type-card-head">
+                            <span className="type-code">{meta.code}</span>
+                            <h4>{meta.displayName}</h4>
+                          </div>
+                          <p className="type-tagline">{meta.tagline}</p>
+                          <p className="type-summary">{meta.summary}</p>
+                          <div className="type-card-foot">
+                            <p className="type-foot-label">最初の一歩</p>
+                            <p>{meta.quickAction}</p>
+                          </div>
+                        </article>
+                      )
+                    })}
+                  </div>
+                </section>
+              ))}
             </div>
           </section>
         )}

@@ -1,4 +1,4 @@
-import type { AxisKey, BlockMeta, Pole, Question, TypeMeta } from '../lib/types'
+import type { AxisKey, BlockMeta, Pole, Question, TypeGroup, TypeMeta } from '../lib/types'
 
 export const SCALE_OPTIONS = [
   { value: 3, short: '強く同意', label: 'とてもそう思う' },
@@ -251,3 +251,30 @@ export const TYPE_META: Record<string, TypeMeta> = {
     shareHook: '安心できる場を自然につくるタイプ。',
   },
 }
+
+export const TYPE_GROUPS: TypeGroup[] = [
+  {
+    id: 'SE',
+    title: '自走開拓群',
+    description: '自分を起点にしながら、まずは広く試して道を見つける4タイプ。',
+    codes: ['SEAP', 'SEAL', 'SEMP', 'SEML'],
+  },
+  {
+    id: 'SF',
+    title: '自走深化群',
+    description: '自分の軸を保ったまま、少数のテーマを深く積み上げる4タイプ。',
+    codes: ['SFAP', 'SFAL', 'SFMP', 'SFML'],
+  },
+  {
+    id: 'CE',
+    title: '交流拡張群',
+    description: '人との接点を広げながら、大学生活の機会を増やしていく4タイプ。',
+    codes: ['CEAP', 'CEAL', 'CEMP', 'CEML'],
+  },
+  {
+    id: 'CF',
+    title: '関係定着群',
+    description: '安心できる関係や場を育てながら、深さをつくっていく4タイプ。',
+    codes: ['CFAP', 'CFAL', 'CFMP', 'CFML'],
+  },
+]
