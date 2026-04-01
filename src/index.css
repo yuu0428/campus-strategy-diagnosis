@@ -1031,6 +1031,246 @@ a {
   justify-content: flex-end;
 }
 
+.poster-capture-shell {
+  position: fixed;
+  left: -99999px;
+  top: 0;
+  width: 1080px;
+  height: 1920px;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.result-poster {
+  position: relative;
+  width: 1080px;
+  height: 1920px;
+  padding: 92px 82px 84px;
+  background:
+    radial-gradient(circle at top right, color-mix(in oklch, var(--accent-lime) 48%, white), transparent 28%),
+    radial-gradient(circle at bottom left, color-mix(in oklch, var(--accent-soft) 62%, white), transparent 30%),
+    linear-gradient(180deg, #f8f7ef 0%, #eef3ea 55%, #e9efe6 100%);
+  color: #213127;
+  display: grid;
+  grid-template-rows: auto auto auto auto 1fr auto;
+  gap: 34px;
+  overflow: hidden;
+}
+
+.poster-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image:
+    linear-gradient(rgba(38, 63, 46, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(38, 63, 46, 0.08) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.poster-ring {
+  position: absolute;
+  border-radius: 999px;
+  border: 1px solid rgba(46, 96, 63, 0.14);
+}
+
+.poster-ring-a {
+  width: 620px;
+  height: 620px;
+  right: -180px;
+  top: -140px;
+}
+
+.poster-ring-b {
+  width: 460px;
+  height: 460px;
+  left: -120px;
+  bottom: 220px;
+}
+
+.poster-header,
+.poster-hero,
+.poster-summary-card,
+.poster-axis-grid,
+.poster-quick-grid,
+.poster-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.poster-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: start;
+}
+
+.poster-brand,
+.poster-kicker,
+.poster-section-label,
+.poster-footer span {
+  margin: 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(33, 49, 39, 0.72);
+}
+
+.poster-hero {
+  display: grid;
+  gap: 12px;
+}
+
+.poster-code {
+  margin: 0;
+  width: fit-content;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(53, 118, 78, 0.1);
+  color: #275a3b;
+  font-size: 1rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.poster-hero h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 5.4rem;
+  line-height: 1.04;
+  letter-spacing: -0.05em;
+}
+
+.poster-tagline {
+  margin: 0;
+  max-width: 12ch;
+  font-size: 1.9rem;
+  line-height: 1.35;
+  color: rgba(33, 49, 39, 0.8);
+}
+
+.poster-summary-card,
+.poster-panel,
+.poster-axis-card {
+  border-radius: 34px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(46, 96, 63, 0.12);
+  box-shadow: 0 24px 50px rgba(42, 84, 57, 0.08);
+}
+
+.poster-summary-card {
+  padding: 30px 32px;
+  display: grid;
+  gap: 12px;
+}
+
+.poster-summary-card p:last-child {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.55;
+}
+
+.poster-axis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.poster-axis-card {
+  padding: 22px 24px;
+  display: grid;
+  gap: 12px;
+}
+
+.poster-axis-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-weight: 700;
+  color: #275a3b;
+}
+
+.poster-axis-track {
+  position: relative;
+  height: 14px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(66, 132, 90, 0.55),
+      rgba(255, 255, 255, 0.9) 50%,
+      rgba(185, 161, 91, 0.5)
+    );
+}
+
+.poster-axis-track-center {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: calc(50% - 1px);
+  width: 2px;
+  background: rgba(33, 49, 39, 0.3);
+}
+
+.poster-axis-track-knob {
+  position: absolute;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  border: 2px solid #2d6e48;
+}
+
+.poster-axis-card p:last-child {
+  margin: 0;
+  font-size: 1.05rem;
+  color: rgba(33, 49, 39, 0.72);
+}
+
+.poster-quick-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.poster-panel {
+  padding: 28px 30px;
+  display: grid;
+  gap: 14px;
+}
+
+.poster-panel strong {
+  font-size: 1.8rem;
+  line-height: 1.45;
+  color: #203126;
+}
+
+.poster-panel ul {
+  margin: 0;
+  padding-left: 1.3rem;
+  display: grid;
+  gap: 10px;
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+
+.poster-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: end;
+}
+
+.poster-footer p {
+  margin: 0;
+  max-width: 18ch;
+  font-size: 1.4rem;
+  line-height: 1.4;
+}
+
 @media (max-width: 980px) {
   .hero-panel,
   .intro-grid,

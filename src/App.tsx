@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { toJpeg } from 'html-to-image'
 import { AXIS_CONFIG, BLOCKS, POLE_COPY, QUESTIONS, SCALE_OPTIONS, TYPE_GROUPS, TYPE_META } from './data/diagnosis'
 import { calculateResult, getAxisCaption } from './lib/assessment'
 import type { DiagnosisResult, ScaleValue } from './lib/types'
@@ -20,11 +21,13 @@ function App() {
   const [answers, setAnswers] = useState<Record<number, ScaleValue>>({})
   const [validationAttempted, setValidationAttempted] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [isExportingImage, setIsExportingImage] = useState(false)
   const [result, setResult] = useState<DiagnosisResult | null>(null)
 
   const detailRef = useRef<HTMLElement | null>(null)
   const shareRef = useRef<HTMLElement | null>(null)
   const questionRefs = useRef<Array<HTMLElement | null>>([])
+  const posterRef = useRef<HTMLDivElement | null>(null)
 
   const currentBlock = BLOCKS[blockIndex]
   const currentQuestions = QUESTIONS.slice(blockIndex * blockSize, (blockIndex + 1) * blockSize)
@@ -121,6 +124,30 @@ function App() {
       setCopied(true)
     } catch {
       setCopied(false)
+    }
+  }
+
+  const handleExportImage = async () => {
+    if (!result || !posterRef.current || isExportingImage) return
+
+    try {
+      setIsExportingImage(true)
+      await document.fonts.ready
+      const dataUrl = await toJpeg(posterRef.current, {
+        quality: 0.96,
+        pixelRatio: 2,
+        backgroundColor: '#f5f5ee',
+        canvasWidth: 1080,
+        canvasHeight: 1920,
+        skipFonts: false,
+      })
+
+      const link = document.createElement('a')
+      link.href = dataUrl
+      link.download = `${result.typeCode.toLowerCase()}-result.jpg`
+      link.click()
+    } finally {
+      setIsExportingImage(false)
     }
   }
 
@@ -421,6 +448,9 @@ function App() {
                 <p className="result-code">{result.typeCode}</p>
                 <p className="lead">{result.heroSummary}</p>
                 <div className="result-actions">
+                  <button className="button primary" onClick={handleExportImage}>
+                    {isExportingImage ? 'JPGを作成中...' : 'JPGで保存'}
+                  </button>
                   <button className="button primary" onClick={() => detailRef.current?.scrollIntoView({ behavior: 'smooth' })}>
                     詳細を見る
                   </button>
@@ -440,7 +470,7 @@ function App() {
               {result.axes.map((axis) => {
                 const leftCopy = POLE_COPY[axis.leftPole]
                 const rightCopy = POLE_COPY[axis.rightPole]
-                const scorePercent = ((axis.score + 36) / 72) * 100
+                const scorePercent = ((36 - axis.score) / 72) * 100
                 return (
                   <article className="axis-card" key={axis.axis}>
                     <div className="axis-card-head">
@@ -543,6 +573,66 @@ function App() {
                 </button>
               </div>
             </section>
+
+            <div className="poster-capture-shell" aria-hidden="true">
+              <div className="result-poster" ref={posterRef}>
+                <div className="poster-noise" />
+                <div className="poster-ring poster-ring-a" />
+                <div className="poster-ring poster-ring-b" />
+
+                <header className="poster-header">
+                  <p className="poster-brand">大学生活タイプ診断</p>
+                  <p className="poster-kicker">Campus Strategy Portrait</p>
+                </header>
+
+                <section className="poster-hero">
+                  <p className="poster-code">{result.typeCode}</p>
+                  <h3>{result.typeMeta.displayName}</h3>
+                  <p className="poster-tagline">{result.typeMeta.tagline}</p>
+                </section>
+
+                <section className="poster-summary-card">
+                  <p className="poster-section-label">Summary</p>
+                  <p>{result.heroSummary}</p>
+                </section>
+
+                <section className="poster-axis-grid">
+                  {result.axes.map((axis) => (
+                    <article className="poster-axis-card" key={axis.axis}>
+                      <div className="poster-axis-head">
+                        <span>{axis.leftPole}</span>
+                        <span>{axis.rightPole}</span>
+                      </div>
+                      <div className="poster-axis-track">
+                        <div className="poster-axis-track-center" />
+                        <div className="poster-axis-track-knob" style={{ left: `${((36 - axis.score) / 72) * 100}%` }} />
+                      </div>
+                      <p>{AXIS_CONFIG[axis.axis].label}</p>
+                    </article>
+                  ))}
+                </section>
+
+                <section className="poster-quick-grid">
+                  <article className="poster-panel">
+                    <p className="poster-section-label">最初の一歩</p>
+                    <strong>{result.typeMeta.quickAction}</strong>
+                  </article>
+                  <article className="poster-panel">
+                    <p className="poster-section-label">向いている活動</p>
+                    <ul>
+                      {result.activities.slice(0, 3).map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </article>
+                </section>
+
+                <footer className="poster-footer">
+                  <p>{result.typeMeta.shareHook}</p>
+                  <span>yuu0428.github.io/campus-strategy-diagnosis</span>
+                </footer>
+              </div>
+            </div>
           </div>
         )}
       </main>
